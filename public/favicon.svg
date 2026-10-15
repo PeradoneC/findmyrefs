@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <title>FindMyRefs</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#232a3b"/>
+      <stop offset="1" stop-color="#121316"/>
+    </linearGradient>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#a7c4ff"/>
+      <stop offset="1" stop-color="#e6b3ff"/>
+    </linearGradient>
+    <linearGradient id="handle" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2c26b"/>
+      <stop offset="1" stop-color="#d99a2b"/>
+    </linearGradient>
+    <clipPath id="lens">
+      <circle cx="430" cy="430" r="250"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background tile -->
+  <rect width="1024" height="1024" rx="224" fill="url(#bg)"/>
+
+  <!-- Handle -->
+  <line x1="640" y1="640" x2="830" y2="830" stroke="url(#handle)" stroke-width="110" stroke-linecap="round"/>
+  <line x1="628" y1="628" x2="690" y2="690" stroke="#e8e9ec" stroke-width="124" stroke-linecap="butt"/>
+
+  <!-- Picture inside the lens -->
+  <g clip-path="url(#lens)">
+    <rect x="150" y="150" width="560" height="560" fill="url(#sky)"/>
+    <circle cx="530" cy="330" r="58" fill="#f2c26b"/>
+    <path d="M150 600 L320 400 L440 540 L530 450 L710 640 L710 710 L150 710 Z" fill="#2c4f9e"/>
+    <path d="M150 650 L300 560 L420 640 L560 570 L710 660 L710 710 L150 710 Z" fill="#1d3570"/>
+  </g>
+
+  <!-- Lens rim and glare -->
+  <circle cx="430" cy="430" r="250" fill="none" stroke="#e8e9ec" stroke-width="56"/>
+  <path d="M290 360 A160 160 0 0 1 380 280" fill="none" stroke="#ffffff" stroke-opacity="0.75" stroke-width="26" stroke-linecap="round"/>
+</svg>
