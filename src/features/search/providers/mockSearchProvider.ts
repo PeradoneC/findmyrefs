@@ -68,7 +68,7 @@ export function createMockSearchProvider(
   options: { delayMs?: number; slowMs?: number } = {},
 ): ImageSearchProvider {
   const delayMs = options.delayMs ?? 150;
-  const slowMs = options.slowMs ?? 30_000;
+  const slowMs = options.slowMs ?? 120_000;
   return {
     id: "mock",
     displayName: "Demo data (mock provider)",

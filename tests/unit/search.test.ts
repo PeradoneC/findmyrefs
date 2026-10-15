@@ -180,9 +180,29 @@ describe("Openverse provider errors", () => {
           reject(new DOMException("aborted", "AbortError")),
         ),
       );
-    await expect(provider(hanging, 30).search({ query: "x" })).rejects.toMatchObject({
-      kind: "timeout",
-    });
+    const err = await provider(hanging, 30)
+      .search({ query: "x" })
+      .catch((e) => e);
+    expect(err).toBeInstanceOf(SearchProviderError);
+    expect(err.kind).toBe("timeout");
+    expect(err.retryable).toBe(true);
+    expect(err.message).toMatch(/Openverse did not answer.*Retry failed/);
+  });
+
+  it("waits long enough for slow Openverse responses by default", async () => {
+    // Uncached Openverse searches have been measured at up to ~50 s.
+    vi.useFakeTimers();
+    try {
+      const slow: typeof fetch = () =>
+        new Promise((resolve) =>
+          setTimeout(() => resolve(jsonResponse({ results: [rawOpenverse] })), 55_000),
+        );
+      const pending = createOpenverseProvider({ fetchImpl: slow }).search({ query: "girl" });
+      await vi.advanceTimersByTimeAsync(56_000);
+      expect(await pending).toHaveLength(1);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("returns empty arrays for empty results and blank queries", async () => {

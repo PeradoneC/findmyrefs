@@ -84,8 +84,9 @@ export function createOpenverseProvider(
   options: { fetchImpl?: Fetch; timeoutMs?: number } = {},
 ): ImageSearchProvider {
   const fetchImpl: Fetch = options.fetchImpl ?? ((...args) => fetch(...args));
-  // Openverse can take 10+ seconds per request under load.
-  const timeoutMs = options.timeoutMs ?? 30_000;
+  // Uncached Openverse searches were measured at 12-51 s (Oct 2026); repeats are
+  // served from Openverse's cache in well under a second.
+  const timeoutMs = options.timeoutMs ?? 75_000;
   return {
     id: "openverse",
     displayName: "Openverse (live, openly licensed)",
@@ -142,6 +143,14 @@ export function createOpenverseProvider(
           throw new SearchProviderError("invalid_response", "Openverse returned invalid JSON");
         }
         return normalizeOpenverseResponse(body);
+      }).catch((err: unknown) => {
+        if (err instanceof SearchProviderError && err.kind === "timeout") {
+          throw new SearchProviderError(
+            "timeout",
+            `Openverse did not answer within ${Math.round(timeoutMs / 1000)} s (it is sometimes very slow). Press "Retry failed": repeated searches are usually much faster.`,
+          );
+        }
+        throw err;
       });
     },
   };

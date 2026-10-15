@@ -54,8 +54,9 @@ export async function runSearch(opts: SearchRunOptions): Promise<SearchRunOutput
     plan,
     page = 1,
     safeSearch = true,
-    concurrency = 2,
-    timeoutMs = 35_000,
+    // Providers enforce their own (shorter) timeouts; this is a safety net.
+    concurrency = 3,
+    timeoutMs = 80_000,
     signal,
   } = opts;
   const raw: RawHit[] = [];
